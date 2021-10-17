@@ -1,7 +1,10 @@
 const WebSocket = require('ws')
 const fetch = require('node-fetch');
+require('dotenv').config();
 
-const wss = new WebSocket.Server({ port: 3000 });
+const PORT = process.env.PORT;
+
+const wss = new WebSocket.Server({ port: parseInt(PORT) });
 
 wss.on('connection', (ws) => {
   console.log('connected');
