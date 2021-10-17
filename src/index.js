@@ -3,6 +3,7 @@ const fetch = require('node-fetch');
 require('dotenv').config();
 
 const PORT = process.env.PORT;
+const INTERVAL = process.env.INTERVAL;
 
 const wss = new WebSocket.Server({ port: parseInt(PORT) });
 
@@ -16,5 +17,5 @@ wss.on('connection', (ws) => {
         ws.send(JSON.stringify(randomRestaurant));
       });
 
-  }, 10 * 1000);
+  }, INTERVAL);
 });
