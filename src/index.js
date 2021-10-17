@@ -6,16 +6,20 @@ const PORT = process.env.PORT;
 const INTERVAL = process.env.INTERVAL;
 
 const wss = new WebSocket.Server({ port: parseInt(PORT) });
+let restaurants = [];
 
-wss.on('connection', (ws) => {
-  console.log('connected');
-  setInterval(() => {
-    fetch('https://restaurant-api.dicoding.dev/list')
-      .then((response) => response.json())
-      .then(({ restaurants }) => {
-        const randomRestaurant = restaurants[Math.floor(Math.random() * restaurants.length)];
-        ws.send(JSON.stringify(randomRestaurant));
-      });
+const init = async () => {
+  const response = await fetch('https://restaurant-api.dicoding.dev/list');
+  const data = await response.json();
+  restaurants = data.restaurants;
 
-  }, INTERVAL);
-});
+  wss.on('connection', (ws) => {
+    console.log('connected');
+    setInterval(() => {
+      const randomRestaurant = restaurants[Math.floor(Math.random() * restaurants.length)];
+      ws.send(JSON.stringify(randomRestaurant));
+    }, parseInt(INTERVAL));
+  });
+};
+
+init();
